@@ -1,17 +1,62 @@
+import { registerAs } from '@nestjs/config'
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm'
+import { config } from 'dotenv'
+import { get } from 'env-var'
+
+config()
+
+class DatabaseConfig {
+  public static readonly SQL_TYPE: string = get('SQL_TYPE')
+    .required()
+    .asString()
+
+  public static readonly SQL_NAME: string = get('SQL_NAME')
+    .required()
+    .asString()
+
+  public static readonly SQL_DATABASE: string = get('SQL_DATABASE')
+    .required()
+    .asString()
+
+  public static readonly SQL_USERNAME: string = get('SQL_USERNAME')
+    .required()
+    .asString()
+
+  public static readonly SQL_PASSWORD: string = get('SQL_PASSWORD')
+    .required()
+    .asString()
+
+  public static readonly SQL_HOST: string = get('SQL_HOST')
+    .required()
+    .asString()
+
+  public static readonly SQL_PORT: number = get('SQL_PORT')
+    .required()
+    .asIntPositive()
+}
+
+console.log('test', DatabaseConfig.SQL_NAME)
+console.log('test', DatabaseConfig.SQL_TYPE)
+console.log('test', DatabaseConfig.SQL_HOST)
+console.log('test', DatabaseConfig.SQL_PORT)
+console.log('test', DatabaseConfig.SQL_USERNAME)
+console.log('test', DatabaseConfig.SQL_PASSWORD)
+console.log('test', DatabaseConfig.SQL_DATABASE)
 
 export const typeormConfig = {
-  name: process.env.SQL_NAME ?? 'default',
-  type: process.env.SQL_TYPE ?? 'postgres',
+  name: DatabaseConfig.SQL_NAME ?? 'default',
+  type: DatabaseConfig.SQL_TYPE ?? 'postgres',
   logging: true,
-  host: process.env.SQL_HOST,
-  port: process.env.SQL_PORT,
-  username: process.env.SQL_USERNAME,
-  password: process.env.SQL_PASSWORD,
-  database: process.env.SQL_DATABASE,
+  host: DatabaseConfig.SQL_HOST ?? 'localhost',
+  port: DatabaseConfig.SQL_PORT,
+  username: DatabaseConfig.SQL_USERNAME,
+  password: DatabaseConfig.SQL_PASSWORD,
+  database: DatabaseConfig.SQL_DATABASE,
   dropSchema: false,
   synchronize: false,
   keepConnectionAlive: true,
   autoLoadEntities: true,
   migrationsRun: false
 } as TypeOrmModuleAsyncOptions
+
+export const databaseConfig = registerAs('database', () => typeormConfig)
