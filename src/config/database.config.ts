@@ -1,8 +1,8 @@
 import { join } from 'path'
-import databaseOptions from './typeorm.config'
+import { typeormConfig } from './typeorm.config'
 
 const database = {
-  ...databaseOptions,
+  ...typeormConfig,
   migrations: [join(__dirname, '..', 'shared/database/migrations/*.{ts,js}')],
   cli: {
     migrationsDir: 'src/shared/database/migrations'

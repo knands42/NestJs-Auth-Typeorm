@@ -22,7 +22,6 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/database.config.ts",
-    "typeorm:migration:generate": "npm run typeorm -- migration:generate -n",
     "typeorm:migration:create": "npm run typeorm -- migration:create -n",
     "typeorm:migration:revert": "npm run typeorm -- migration:revert",
     "typeorm:migration:run": "npm run typeorm -- migration:run"
