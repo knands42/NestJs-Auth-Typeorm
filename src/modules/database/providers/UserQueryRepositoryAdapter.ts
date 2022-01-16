@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UserQueryRepositoryPort } from 'domain/database/port/out/UserQueryRepositoryPort'
-import { User } from 'domain/user/entities/User'
+import { UserQueryRepositoryPort, User } from 'domain/index'
 import { UserQueryRepository } from '../repository/UserQueryRepository'
 
 @Injectable()

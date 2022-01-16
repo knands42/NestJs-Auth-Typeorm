@@ -1,0 +1,5 @@
+export * from './providers/UserPersistenceRepositoryAdapter'
+export * from './providers/UserQueryRepositoryAdapter'
+export * from './repository/UserPersistenceRepository'
+export * from './repository/UserQueryRepository'
+export * from './DatabaseModule'

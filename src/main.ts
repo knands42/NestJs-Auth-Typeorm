@@ -3,9 +3,11 @@ import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import 'colors'
-import { AllExceptionFilter } from 'infra/filters/HttpExceptionFilter'
-import { ResultInterceptor } from 'infra/interceptors/ResultInterceptor'
-import { validationErrorFactory } from 'infra/pipes/ValidationExceptionFactory'
+import {
+  AllExceptionFilter,
+  ResultInterceptor,
+  validationErrorFactory
+} from 'infra'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
+import { QueryUserUserCase, User } from 'domain/index'
 import { UserQueryRepositoryPort } from 'domain/database/port/out/UserQueryRepositoryPort'
-import { User } from '../../../domain/user/entities/User'
-import { QueryUserUserCase } from '../../../domain/user/port/in/QueryUserUseCase'
 
 @Injectable()
 export class QueryUserService implements QueryUserUserCase {
