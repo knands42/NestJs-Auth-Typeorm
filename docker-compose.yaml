@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    entrypoint: ./.docker/entrypoint.sh
+    container_name: auth-service
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    networks:
+      - nest_auth_network
+
+  db:
+    build: .docker/postgres
+    container_name: auth-service-db
+    restart: always
+    tty: true
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgresql/data
+      - ./.docker/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=user_db
+    networks:
+      - nest_auth_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: auth-service-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@user.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - 9000:80
+    networks:
+      - nest_auth_network
+
+networks:
+  nest_auth_network:
+    driver: bridge

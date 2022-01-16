@@ -1,0 +1,6 @@
+.docker/*
+.github/*
+.npm-cache/*
+README.md
+node_modules
+npm-debug.log
