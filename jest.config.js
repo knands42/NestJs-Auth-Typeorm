@@ -1,13 +1,15 @@
 export default {
   clearMocks: true,
   collectCoverage: true,
+  testEnvironment: "node",
   coverageProvider: 'v8',
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
   preset: 'ts-jest',
   rootDir: '.',
   roots: ['<rootDir>'],
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
-  coverageDirectory: 'coverage',
+  coverageDirectory: './__tests__/coverage',
+  transform: { "^.+\\.(t|j)s$": "ts-jest" },
 
   collectCoverageFrom: [
     '<rootDir>/src/modules/**/*.service.ts',

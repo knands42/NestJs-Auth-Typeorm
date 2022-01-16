@@ -35,14 +35,6 @@ class DatabaseConfig {
     .asIntPositive()
 }
 
-console.log('test', DatabaseConfig.SQL_NAME)
-console.log('test', DatabaseConfig.SQL_TYPE)
-console.log('test', DatabaseConfig.SQL_HOST)
-console.log('test', DatabaseConfig.SQL_PORT)
-console.log('test', DatabaseConfig.SQL_USERNAME)
-console.log('test', DatabaseConfig.SQL_PASSWORD)
-console.log('test', DatabaseConfig.SQL_DATABASE)
-
 export const typeormConfig = {
   name: DatabaseConfig.SQL_NAME ?? 'default',
   type: DatabaseConfig.SQL_TYPE ?? 'postgres',
