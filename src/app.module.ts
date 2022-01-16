@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { optionsConfig } from 'config/nest.config'
-import { UserModule } from 'modules/user/user.module'
+import { optionsConfig } from 'infra/config/nest.config'
+import { UserModule } from 'modules/user/UserModule'
 
 @Module({
   imports: [
