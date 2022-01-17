@@ -1,4 +1,4 @@
 const config = require('./jest.config')
-config.testMatch = ['**/?(*.)+(test).[tj]s?(x)']
+config.testRegex: '.test.ts$',
 
 module.exports = config

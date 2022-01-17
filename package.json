@@ -17,7 +17,6 @@
     "test": "NODE_ENV=test jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:cov": "npm test -- --coverage --detectOpenHandles",
-    "test:unit": "npm test -- -c jest-unit.config.js",
     "test:e2e": "npm test -- -c jest-e2e.config.js",
     "test:staged": "npm test -- --findRelatedTests",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",

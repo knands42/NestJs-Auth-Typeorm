@@ -1,55 +1,29 @@
-export default {
-  clearMocks: true,
-  collectCoverage: true,
-  testEnvironment: "node",
-  coverageProvider: 'v8',
-  coverageReporters: ['json', 'text', 'lcov', 'clover'],
-  preset: 'ts-jest',
-  rootDir: '.',
+module.exports = {
+  moduleFileExtensions: ['js', 'json', 'ts'],
   roots: ['<rootDir>'],
-  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
+  rootDir: '.',
+  modulePaths: ['<rootDir>'],
+  clearMocks: true,
+  testEnvironment: 'node',
+  collectCoverage: true,
   coverageDirectory: './__tests__/coverage',
-  transform: { "^.+\\.(t|j)s$": "ts-jest" },
-
-  collectCoverageFrom: [
-    '<rootDir>/src/modules/**/*.service.ts',
-    '<rootDir>/src/modules/**/*.repository.ts',
-    '<rootDir>/src/modules/**/pipes/*.ts',
-    '<rootDir>/src/modules/**/guards/*.ts',
-    '<rootDir>/src/shared/**/guards/*.ts',
-    '<rootDir>/src/shared/**/guards/*.ts',
-    '<rootDir>/src/shared/**/guards/*.ts',
-    '<rootDir>/src/shared/**/guards/*.ts'
-  ],
+  coverageReporters: ['json', 'text', 'lcov', 'clover'],
+  coverageProvider: 'v8',
+  preset: 'ts-jest',
+  testRegex: '.spec.ts$',
+  transform: {
+    '^.+\\.(t|j)s$': 'ts-jest'
+  },
+  moduleNameMapper: {
+    '^infra/?(.*)$': '<rootDir>/src/infra/$1',
+    '^domain/?(.*)$': '<rootDir>/src/domain/$1',
+    '^modules/?(.*)$': '<rootDir>/src/modules/$1',
+    '^utils/?(.*)$': '<rootDir>/src/utils/$1'
+  },
+  collectCoverageFrom: ['<rootDir>/src/modules/**/*.ts'],
   coveragePathIgnorePatterns: [
-    '<rootDir>/src/config/*',
-    '<rootDir>/src/app.modules.ts',
-
-    '<rootDir>/src/shared/filters/*',
-    '<rootDir>/src/shared/interceptors/*',
-    '<rootDir>/src/shared/providers/**/*.ts',
-    '<rootDir>/src/shared/**/decorators/*',
-    '<rootDir>/src/shared/**/guards/*',
-    '<rootDir>/src/shared/**/models/*',
-    '<rootDir>/src/shared/**/*.module.ts',
-    '<rootDir>/src/shared/**/*.controller.ts',
-
-    '<rootDir>/src/shared/modules/filters/*',
-    '<rootDir>/src/shared/modules/interceptors/*',
-    '<rootDir>/src/shared/modules/**/providers/**/*.ts',
-    '<rootDir>/src/shared/modules/**/decorators/*',
-    '<rootDir>/src/shared/modules/**/guards/*',
-    '<rootDir>/src/shared/modules/**/models/*',
-    '<rootDir>/src/shared/modules/**/*.module.ts',
-    '<rootDir>/src/shared/modules/**/*.controller.ts',
-
-    '<rootDir>/src/modules/filters/*',
-    '<rootDir>/src/modules/interceptors/*',
-    '<rootDir>/src/modules/**/providers/**/*.ts',
-    '<rootDir>/src/modules/**/decorators/*',
-    '<rootDir>/src/modules/**/guards/*',
-    '<rootDir>/src/modules/**/models/*',
-    '<rootDir>/src/modules/**/*.module.ts',
-    '<rootDir>/src/modules/**/*.controller.ts'
+    '<rootDir>/src/domain/*',
+    '<rootDir>/src/infra/*',
+    '<rootDir>/src/AppModule.ts'
   ]
 }
