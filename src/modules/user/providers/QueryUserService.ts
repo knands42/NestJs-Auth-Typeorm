@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { QueryUserUserCase, User } from 'domain/index'
 import { UserQueryRepositoryPort } from 'domain/database/port/out/UserQueryRepositoryPort'
+import { QueryUserUserCase, User } from 'domain/user'
 
 @Injectable()
 export class QueryUserService implements QueryUserUserCase {
@@ -11,5 +11,9 @@ export class QueryUserService implements QueryUserUserCase {
 
   async findAll(): Promise<User[]> {
     return this.userQueryRepositoryPort.getAll()
+  }
+
+  async findById(id: string): Promise<User> {
+    return this.userQueryRepositoryPort.getById(id)
   }
 }

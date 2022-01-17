@@ -46,7 +46,7 @@ class User extends BaseEntity {
   emailVerified: boolean
 
   @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
-  roles: UserRoles
+  role: UserRoles
 
   @Column('text', { array: true })
   permissions: UserPermissions[]

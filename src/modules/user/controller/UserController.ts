@@ -1,5 +1,5 @@
 import { Controller, Get, Inject } from '@nestjs/common'
-import { User, QueryUserUserCase } from 'domain/index'
+import { QueryUserUserCase, User } from 'domain/user'
 
 @Controller('users')
 export class UsersController {

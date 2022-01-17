@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { optionsConfig } from 'infra'
-import { UserModule } from 'modules'
+import { AuthModule } from 'modules/auth'
+import { UserModule } from 'modules/user/UserModule'
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UserModule } from 'modules'
     }),
 
     // Custom Modules
-    UserModule
+    UserModule,
+    AuthModule
   ]
 })
 export class AppModule {}
