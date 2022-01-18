@@ -31,7 +31,7 @@ export class SignUserProvider implements SignUpUserUseCase {
 
     if (user) throw new ConflictException('User already signed')
 
-    user = Object.assign(user, payload)
+    user = Object.assign(new User(), payload)
     user.password = await this.authUseCase.hashPassword(payload.password)
 
     await this.userPersistenceRepositoryPort.persist(user)

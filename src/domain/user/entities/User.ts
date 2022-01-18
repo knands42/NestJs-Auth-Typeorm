@@ -60,6 +60,8 @@ class User extends BaseEntity {
   @BeforeInsert()
   cleanEmail() {
     this.email = this.email.toLowerCase().trim()
+    this.role = UserRoles.USER
+    this.permissions = [UserPermissions.READ]
   }
 }
 
