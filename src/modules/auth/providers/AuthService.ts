@@ -8,8 +8,8 @@ import { User } from 'domain/user'
 export class AuthService implements AuthUseCase {
   constructor(private readonly jwtService: JwtService) {}
 
-  async generateJwt(user: User): Promise<string> {
-    return this.jwtService.signAsync({ user })
+  generateJwt(user: User): string {
+    return this.jwtService.sign({ user })
   }
 
   async comparePassword(

@@ -9,10 +9,10 @@ import { from, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 @Injectable()
-export class UserIsCanOperate implements CanActivate {
+export class UserCanOperate implements CanActivate {
   constructor(
-    @Inject('QueryUserUserCase')
-    private readonly queryUserUserCase: QueryUserUseCase
+    @Inject('QueryUserUseCase')
+    private readonly queryUserUseCase: QueryUserUseCase
   ) {}
 
   canActivate(
@@ -23,7 +23,7 @@ export class UserIsCanOperate implements CanActivate {
     const params = request.params
     const user: User = request.user
 
-    return from(this.queryUserUserCase.findById(user.id)).pipe(
+    return from(this.queryUserUseCase.findById(user.id)).pipe(
       map((user: User) => {
         const hasPermission = user.id === String(params.id)
         return user && hasPermission

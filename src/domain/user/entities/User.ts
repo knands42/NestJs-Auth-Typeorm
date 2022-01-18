@@ -41,7 +41,6 @@ class User extends BaseEntity {
   @Column()
   password: string
 
-  @Exclude()
   @Column({ name: 'email_verified', type: 'boolean', default: false })
   emailVerified: boolean
 
@@ -65,4 +64,4 @@ class User extends BaseEntity {
   }
 }
 
-export { UserRoles, User }
+export { UserRoles, UserPermissions, User }

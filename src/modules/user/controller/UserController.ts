@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Header,
+  Headers,
   Inject,
+  Param,
   Post,
   UseGuards,
   UseInterceptors
@@ -17,8 +20,10 @@ import { SignInRequest } from 'domain/user/models/request/SignInRequest'
 import { SignUpRequest } from 'domain/user/models/request/SignUpRequest'
 import { SignInResponse } from 'domain/user/models/response/SignInResponse'
 import { JwtAuthGuard } from 'modules/auth/guard/JwtAuthGuard'
+import { AuthUser } from '../decorators/AuthUser'
 import { hasRoles } from '../decorators/PermissionsDecorator'
 import { RolesGuard } from '../guard/RoleGuard'
+import { UserCanOperate } from '../guard/UserCanOperate'
 import { ResponseInterceptor } from '../interceptor/ResponseInterceptor'
 
 @Controller('users')
@@ -36,6 +41,20 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(): Promise<User[]> {
     return await this.queryUserUserCase.findAll()
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async findUserInfo(@AuthUser() user: User): Promise<User> {
+    return this.queryUserUserCase.findById(user.id)
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @hasRoles(UserRoles.ADMIN)
+  @UseGuards(UserCanOperate || RolesGuard)
+  async findOne(@Param('id') id: string): Promise<User> {
+    return this.queryUserUserCase.findById(id)
   }
 
   @Post('signup')

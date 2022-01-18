@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport'
 import { JwtAuthGuard } from './guard/JwtAuthGuard'
-import { JwtStrategy } from './guard/JwtAuthStrategy'
-import { AuthService } from './service/AuthService'
+import { JwtAuthStrategy } from './guard/JwtAuthStrategy'
+import { AuthService } from './providers/AuthService'
 
 @Module({
   imports: [
@@ -11,17 +12,20 @@ import { AuthService } from './service/AuthService'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') }
+        secret: configService.get<string>('auth.jwt_secret'),
+        signOptions: {
+          expiresIn: configService.get<string>('auth.jwt_expires_in')
+        }
       })
-    })
+    }),
+    PassportModule.register({ defaultStrategy: 'jwt' })
   ],
   providers: [
     {
       provide: 'AuthUseCase',
       useClass: AuthService
     },
-    JwtStrategy,
+    JwtAuthStrategy,
     JwtAuthGuard
   ],
   exports: [
@@ -29,7 +33,9 @@ import { AuthService } from './service/AuthService'
       provide: 'AuthUseCase',
       useClass: AuthService
     },
-    JwtAuthGuard
+    JwtAuthGuard,
+    JwtAuthStrategy,
+    PassportModule
   ]
 })
 export class AuthModule {}

@@ -12,7 +12,7 @@ import { from, map, Observable } from 'rxjs'
 export class PermissionGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    @Inject('QueryUserUserCase')
+    @Inject('QueryUserUseCase')
     private readonly queryUserUserCase: QueryUserUseCase
   ) {}
 

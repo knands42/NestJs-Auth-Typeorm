@@ -14,15 +14,13 @@ export class ResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(data => {
         if (data instanceof User) {
-          if (Array.isArray(data)) {
-            return data.map(item => ({
-              ...instanceToInstance(item)
-            }))
-          }
+          return { ...instanceToInstance(data) }
+        }
 
-          return {
-            ...instanceToInstance(data)
-          }
+        if (Array.isArray(data)) {
+          return data.map(item =>
+            item instanceof User ? { ...instanceToInstance(item) } : item
+          )
         }
 
         return data
