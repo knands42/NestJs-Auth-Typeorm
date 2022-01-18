@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { QueryUserService } from './providers/QueryUserService'
+import { QueryUserProvider } from './providers/QueryUserProvider'
 import { UsersController } from './controller/UserController'
 import { DatabaseModule } from 'modules/database/DatabaseModule'
 import { AuthModule } from 'modules/auth'
-import { RolesGuard } from './guard/RoleGuard'
+import { SignUserProvider } from './providers/SignUserProvider'
 
 @Module({
   imports: [DatabaseModule, AuthModule],
@@ -11,9 +11,13 @@ import { RolesGuard } from './guard/RoleGuard'
   providers: [
     {
       provide: 'QueryUserUseCase',
-      useClass: QueryUserService
+      useClass: QueryUserProvider
+    },
+    {
+      provide: 'SignUserUseCase',
+      useClass: SignUserProvider
     }
   ],
-  exports: [{ provide: 'QueryUserUseCase', useClass: QueryUserService }]
+  exports: [{ provide: 'QueryUserUseCase', useClass: QueryUserProvider }]
 })
 export class UserModule {}

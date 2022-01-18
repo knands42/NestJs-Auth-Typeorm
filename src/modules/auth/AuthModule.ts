@@ -16,7 +16,20 @@ import { AuthService } from './service/AuthService'
       })
     })
   ],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard],
-  exports: [AuthService, JwtAuthGuard]
+  providers: [
+    {
+      provide: 'AuthUseCase',
+      useClass: AuthService
+    },
+    JwtStrategy,
+    JwtAuthGuard
+  ],
+  exports: [
+    {
+      provide: 'AuthUseCase',
+      useClass: AuthService
+    },
+    JwtAuthGuard
+  ]
 })
 export class AuthModule {}

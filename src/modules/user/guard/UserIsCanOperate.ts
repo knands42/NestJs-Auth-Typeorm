@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable
 } from '@nestjs/common'
-import { QueryUserUserCase, User } from 'domain/user'
+import { QueryUserUseCase, User } from 'domain/user'
 import { from, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators'
 export class UserIsCanOperate implements CanActivate {
   constructor(
     @Inject('QueryUserUserCase')
-    private readonly queryUserUserCase: QueryUserUserCase
+    private readonly queryUserUserCase: QueryUserUseCase
   ) {}
 
   canActivate(

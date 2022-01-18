@@ -39,3 +39,4 @@ lerna-debug.log*
 
 # Tests
 coverage
+.env

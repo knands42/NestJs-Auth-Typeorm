@@ -18,4 +18,10 @@ export class UserQueryRepositoryAdapter implements UserQueryRepositoryPort {
   async getById(id: string): Promise<User> {
     return this.userQueryRepository.findOne(id)
   }
+
+  async findByEmailOrUserName(username: string, email: string): Promise<User> {
+    return this.userQueryRepository.findOne({
+      where: [{ email }, { username }]
+    })
+  }
 }
