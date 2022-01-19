@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
+import { TokenPayload } from 'domain/auth/types'
 import {
   QueryUserUseCase,
   SignUpUserUseCase,
@@ -20,7 +21,7 @@ import { SignInRequest } from 'domain/user/models/request/SignInRequest'
 import { SignUpRequest } from 'domain/user/models/request/SignUpRequest'
 import { SignInResponse } from 'domain/user/models/response/SignInResponse'
 import { JwtAuthGuard } from 'modules/auth/guard/JwtAuthGuard'
-import { AuthUser } from '../decorators/AuthUser'
+import { GetTokenPayload } from '../decorators/GetTokenPayload'
 import { hasRoles } from '../decorators/PermissionsDecorator'
 import { RolesGuard } from '../guard/RoleGuard'
 import { UserCanOperate } from '../guard/UserCanOperate'
@@ -45,8 +46,8 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async findUserInfo(@AuthUser() user: User): Promise<User> {
-    return this.queryUserUserCase.findById(user.id)
+  async findUserInfo(@GetTokenPayload() payload: TokenPayload): Promise<User> {
+    return this.queryUserUserCase.findById(payload.id)
   }
 
   @Get(':id')

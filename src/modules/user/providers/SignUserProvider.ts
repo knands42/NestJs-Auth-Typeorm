@@ -54,7 +54,7 @@ export class SignUserProvider implements SignUpUserUseCase {
     if (!passwordCheck) throw new UnauthorizedException('Wrong credentials')
 
     Reflect.deleteProperty(user, 'password')
-    const token = await this.authUseCase.generateJwt(user)
+    const token = await this.authUseCase.generateJwt({ id: user.id })
 
     return { token, userId: user.id }
   }
