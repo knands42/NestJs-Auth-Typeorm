@@ -45,7 +45,7 @@ export class SignUserProvider implements SignUpUserUseCase {
       payload.credential
     )
 
-    if (!user) throw new NotFoundException('User could not be found')
+    if (!user) throw new UnauthorizedException('Wrong credentials')
 
     const passwordCheck = await this.authUseCase.comparePassword(
       payload.password,
@@ -53,8 +53,13 @@ export class SignUserProvider implements SignUpUserUseCase {
     )
     if (!passwordCheck) throw new UnauthorizedException('Wrong credentials')
 
-    Reflect.deleteProperty(user, 'password')
-    const token = await this.authUseCase.generateJwt({ id: user.id })
+    const { id, permissions, username, role } = user
+    const token = await this.authUseCase.generateJwt({
+      id,
+      permissions,
+      username,
+      role
+    })
 
     return { token, userId: user.id }
   }

@@ -1,21 +1,13 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable
-} from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { QueryUserUseCase, User, UserPermissions } from 'domain/user'
-import { from, map, Observable } from 'rxjs'
+import { TokenPayload } from 'domain/auth/types'
+import { UserPermissions } from 'domain/user'
+import { Observable } from 'rxjs'
 import { PERMISSIONS_KEY } from '../decorators/PermissionsDecorator'
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    @Inject('QueryUserUseCase')
-    private readonly queryUserUserCase: QueryUserUseCase
-  ) {}
+  constructor(private reflector: Reflector) {}
 
   canActivate(
     context: ExecutionContext
@@ -27,16 +19,10 @@ export class PermissionGuard implements CanActivate {
     if (!permissions) return true
 
     const request = context.switchToHttp().getRequest()
-    const user: User = request.user
+    const { permissions: userPermissions }: TokenPayload = request.user
 
-    return from(this.queryUserUserCase.findById(user.id)).pipe(
-      map(
-        (user: User) =>
-          user &&
-          permissions.every(permission =>
-            user.permissions.includes(UserPermissions[permission])
-          )
-      )
+    return permissions.every(permission =>
+      userPermissions.includes(UserPermissions[permission])
     )
   }
 }
