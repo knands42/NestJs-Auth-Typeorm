@@ -3,16 +3,16 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Put,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common'
-import { TokenPayload } from 'domain/auth/types'
-import { QueryUserUseCase, User, UserRoles } from 'domain/user'
+import { QueryUserUseCase, User } from 'domain/user'
 import { UpdateUserRequest } from 'domain/user/models/request/UpdateUserRequest'
+import { DeleteUserUseCase } from 'domain/user/port/in/DeleteUserUseCase'
 import { UpdateUserUseCase } from 'domain/user/port/in/UpdateUserUseCase'
 import { JwtAuthGuard } from 'modules/auth/guard/JwtAuthGuard'
-import { GetTokenPayload } from 'modules/user/decorators/GetTokenPayload'
 import { OnlyAdminGuard } from 'modules/user/guard/OnlyAdminGuard'
 import { ResponseInterceptor } from '../../interceptor/ResponseInterceptor'
 
@@ -24,7 +24,9 @@ export class AdminController {
     @Inject('QueryUserUseCase')
     private readonly queryUserUserCase: QueryUserUseCase,
     @Inject('UpdateUserUseCase')
-    private readonly updateUserUseCase: UpdateUserUseCase
+    private readonly updateUserUseCase: UpdateUserUseCase,
+    @Inject('DeleteUserUseCase')
+    private readonly deleteUserUseCase: DeleteUserUseCase
   ) {}
 
   @Get('users')
@@ -32,11 +34,16 @@ export class AdminController {
     return this.queryUserUserCase.findAll()
   }
 
-  @Put(':id')
+  @Put('users/:id')
   async updateOne(
-    @GetTokenPayload() user: TokenPayload,
+    @Param('id') id: string,
     @Body() payload: UpdateUserRequest
   ): Promise<User> {
-    return this.updateUserUseCase.updateOne(user.id, payload)
+    return this.updateUserUseCase.updateOne(id, payload)
+  }
+
+  @Put('users/:id')
+  async deleteOne(@Param('id') id: string): Promise<void> {
+    return this.deleteUserUseCase.deleteOne(id)
   }
 }
