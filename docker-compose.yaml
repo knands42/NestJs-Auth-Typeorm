@@ -1,18 +1,18 @@
 version: '3'
 
 services:
-  # app:
-  #   build: .
-  #   entrypoint: ./.docker/entrypoint.sh
-  #   container_name: auth-service
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - .:/home/node/app
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - nest_auth_network
+  app:
+    build: .
+    entrypoint: ./.docker/entrypoint.sh
+    container_name: auth-service
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    networks:
+      - nest_auth_network
 
   db:
     build: .docker/postgres

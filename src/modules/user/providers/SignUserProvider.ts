@@ -24,10 +24,10 @@ export class SignUserProvider implements SignUpUserUseCase {
   ) {}
 
   async signUp(payload: SignUpRequest): Promise<User> {
-    let user = await this.queryUserProvider.findByUsernameOrEmail(
-      payload.email,
-      payload.username
-    )
+    let user = await this.queryUserProvider.findByUsernameOrEmail({
+      username: payload.username,
+      email: payload.email
+    })
 
     if (user) throw new ConflictException('User already signed')
 
@@ -40,10 +40,10 @@ export class SignUserProvider implements SignUpUserUseCase {
   }
 
   async signIn(payload: SignInRequest): Promise<SignInResponse> {
-    let user = await this.queryUserProvider.findByUsernameOrEmail(
-      payload.credential,
-      payload.credential
-    )
+    let user = await this.queryUserProvider.findByUsernameOrEmail({
+      username: payload.credential,
+      email: payload.credential
+    })
 
     if (!user) throw new UnauthorizedException('Wrong credentials')
 
