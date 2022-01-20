@@ -10,6 +10,7 @@ import { UserCanOperate } from './guard/UserCanOperate'
 import { PassportModule } from '@nestjs/passport'
 import { AdminController } from './controller/v1/AdminController'
 import { UsersController } from './controller/v1/UserController'
+import { UpdateUserProvider } from './providers/UpdateUserProvider'
 
 @Module({
   imports: [
@@ -26,6 +27,10 @@ import { UsersController } from './controller/v1/UserController'
     {
       provide: 'SignUserUseCase',
       useClass: SignUserProvider
+    },
+    {
+      provide: 'UpdateUserUseCase',
+      useClass: UpdateUserProvider
     },
     ResponseInterceptor,
     RolesGuard,

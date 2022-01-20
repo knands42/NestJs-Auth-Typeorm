@@ -18,8 +18,9 @@ import {
 } from 'domain/user'
 import { SignInRequest } from 'domain/user/models/request/SignInRequest'
 import { SignUpRequest } from 'domain/user/models/request/SignUpRequest'
-import { UpdateUserDTO } from 'domain/user/models/request/UpdateUserDTO'
+import { UpdateUserRequest } from 'domain/user/models/request/UpdateUserRequest'
 import { SignInResponse } from 'domain/user/models/response/SignInResponse'
+import { UpdateUserUseCase } from 'domain/user/port/in/UpdateUserUseCase'
 import { JwtAuthGuard } from 'modules/auth/guard/JwtAuthGuard'
 import { GetTokenPayload } from '../../decorators/GetTokenPayload'
 import { Roles } from '../../decorators/RolesDecorator'
@@ -34,7 +35,9 @@ export class UsersController {
     @Inject('QueryUserUseCase')
     private readonly queryUserUserCase: QueryUserUseCase,
     @Inject('SignUserUseCase')
-    private readonly signUpUserUseCase: SignUpUserUseCase
+    private readonly signUpUserUseCase: SignUpUserUseCase,
+    @Inject('UpdateUserUseCase')
+    private readonly updateUserUseCase: UpdateUserUseCase
   ) {}
 
   @Get('me')
@@ -50,15 +53,15 @@ export class UsersController {
     return this.queryUserUserCase.findById(id)
   }
 
-  // @Roles(UserRoles.ADMIN)
-  // @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
-  // @Put(':id')
-  // async updateOne(
-  //   @GetTokenPayload() user: User,
-  //   @Body() payload: UpdateUserDTO
-  // ): Promise<User> {
-  //   return this.signUpUserUseCase.updateOne(user.id, payload)
-  // }
+  @Roles(UserRoles.ADMIN)
+  @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
+  @Put(':id')
+  async updateOne(
+    @GetTokenPayload() user: TokenPayload,
+    @Body() payload: UpdateUserRequest
+  ): Promise<User> {
+    return this.updateUserUseCase.updateOne(user.id, payload)
+  }
 
   @Post('signup')
   async signUp(@Body() payload: SignUpRequest): Promise<User> {
