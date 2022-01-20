@@ -11,6 +11,7 @@ import { PassportModule } from '@nestjs/passport'
 import { AdminController } from './controller/v1/AdminController'
 import { UsersController } from './controller/v1/UserController'
 import { UpdateUserProvider } from './providers/UpdateUserProvider'
+import { DeleteUserProvider } from './providers/DeleteUserProvider'
 
 @Module({
   imports: [
@@ -31,6 +32,10 @@ import { UpdateUserProvider } from './providers/UpdateUserProvider'
     {
       provide: 'UpdateUserUseCase',
       useClass: UpdateUserProvider
+    },
+    {
+      provide: 'DeleteUserUseCase',
+      useClass: DeleteUserProvider
     },
     ResponseInterceptor,
     RolesGuard,

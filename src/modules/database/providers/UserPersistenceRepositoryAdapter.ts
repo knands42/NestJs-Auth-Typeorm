@@ -22,4 +22,8 @@ export class UserPersistenceRepositoryAdapter
     await this.userPersistenceRepository.update(id, user)
     return this.userPersistenceRepository.create(user)
   }
+
+  async delete(id: string): Promise<void> {
+    await this.userPersistenceRepository.delete(id)
+  }
 }
