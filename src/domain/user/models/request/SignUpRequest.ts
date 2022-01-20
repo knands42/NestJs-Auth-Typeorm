@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
-import { Match } from 'modules/user/decorators/MathDecorator'
+import { Match } from 'modules/user/decorators/MatchDecorator'
 
 export class SignUpRequest {
   @IsNotEmpty()

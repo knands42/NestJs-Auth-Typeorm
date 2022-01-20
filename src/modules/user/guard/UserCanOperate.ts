@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable
 } from '@nestjs/common'
+import { TokenPayload } from 'domain/auth/types'
 import { QueryUserUseCase, User } from 'domain/user'
 import { from, Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -21,7 +22,7 @@ export class UserCanOperate implements CanActivate {
     const request = context.switchToHttp().getRequest()
 
     const params = request.params
-    const user: User = request.user
+    const user: TokenPayload = request.user
 
     return from(this.queryUserUseCase.findById(user.id)).pipe(
       map((user: User) => {

@@ -1,4 +1,5 @@
 import { createParamDecorator, SetMetadata } from '@nestjs/common'
 
-export const hasRoles = (...hasPermissions: string[]) =>
-  SetMetadata('roles', hasPermissions)
+export const PERMISSIONS_KEY = 'permissions'
+export const Permissions = (...hasPermissions: string[]) =>
+  SetMetadata(PERMISSIONS_KEY, hasPermissions)

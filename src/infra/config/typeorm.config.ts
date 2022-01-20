@@ -39,7 +39,7 @@ export const typeormConfig = {
   name: DatabaseConfig.SQL_NAME ?? 'default',
   type: DatabaseConfig.SQL_TYPE ?? 'postgres',
   logging: true,
-  host: DatabaseConfig.SQL_HOST ?? 'localhost',
+  host: null ?? 'localhost',
   port: DatabaseConfig.SQL_PORT,
   username: DatabaseConfig.SQL_USERNAME,
   password: DatabaseConfig.SQL_PASSWORD,

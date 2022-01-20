@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './AppModule'
@@ -14,6 +14,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.enableCors()
   app.setGlobalPrefix('api')
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1'
+  })
   app.useGlobalFilters(new AllExceptionFilter())
   app.useGlobalInterceptors(new ResultInterceptor())
   app.useGlobalPipes(

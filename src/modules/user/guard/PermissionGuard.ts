@@ -5,8 +5,9 @@ import {
   Injectable
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { QueryUserUseCase, User } from 'domain/user'
+import { QueryUserUseCase, User, UserPermissions } from 'domain/user'
 import { from, map, Observable } from 'rxjs'
+import { PERMISSIONS_KEY } from '../decorators/PermissionsDecorator'
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class PermissionGuard implements CanActivate {
     context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
     const permissions = this.reflector.get<string[]>(
-      'permissions',
+      PERMISSIONS_KEY,
       context.getHandler()
     )
     if (!permissions) return true
@@ -29,10 +30,13 @@ export class PermissionGuard implements CanActivate {
     const user: User = request.user
 
     return from(this.queryUserUserCase.findById(user.id)).pipe(
-      map((user: User) => {
-        const hasPermissions = () => permissions.indexOf(user.role) > -1
-        return user && hasPermissions()
-      })
+      map(
+        (user: User) =>
+          user &&
+          permissions.every(permission =>
+            user.permissions.includes(UserPermissions[permission])
+          )
+      )
     )
   }
 }

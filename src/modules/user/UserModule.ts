@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 import { QueryUserProvider } from './providers/QueryUserProvider'
-import { UsersController } from './controller/UserController'
 import { DatabaseModule } from 'modules/database/DatabaseModule'
 import { AuthModule } from 'modules/auth'
 import { SignUserProvider } from './providers/SignUserProvider'
@@ -9,6 +8,8 @@ import { RolesGuard } from './guard/RoleGuard'
 import { PermissionGuard } from './guard/PermissionGuard'
 import { UserCanOperate } from './guard/UserCanOperate'
 import { PassportModule } from '@nestjs/passport'
+import { AdminController } from './controller/v1/AdminController'
+import { UsersController } from './controller/v1/UserController'
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { PassportModule } from '@nestjs/passport'
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
-  controllers: [UsersController],
+  controllers: [UsersController, AdminController],
   providers: [
     {
       provide: 'QueryUserUseCase',
