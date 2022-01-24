@@ -14,7 +14,7 @@
     "start:dev": "NODE_ENV=dev nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "NODE_ENV=prod node dist/main",
-    "test": "NODE_ENV=test jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles --forceExit",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:cov": "npm test -- --coverage --detectOpenHandles",
     "test:e2e": "npm test -- -c jest-e2e.config.js",

@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { AuthUseCase } from 'domain/auth/port/in/AuthUseCase'
 import { JwtService } from '@nestjs/jwt'
 import { randomBytes, scryptSync, timingSafeEqual } from 'crypto'
-import { User } from 'domain/user'
 import { TokenPayload } from 'domain/auth/types'
 
 @Injectable()
-export class AuthService implements AuthUseCase {
+export class AuthProvider implements AuthUseCase {
   constructor(private readonly jwtService: JwtService) {}
 
   generateJwt(payload: TokenPayload): string {
