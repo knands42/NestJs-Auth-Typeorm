@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -23,6 +24,7 @@ import { SignInResponse } from 'domain/user/models/response/SignInResponse'
 import { DeleteUserUseCase } from 'domain/user/port/in/DeleteUserUseCase'
 import { UpdateUserUseCase } from 'domain/user/port/in/UpdateUserUseCase'
 import { JwtAuthGuard } from 'modules/auth/guard/JwtAuthGuard'
+import { OnlyAdminGuard } from 'modules/user/guard/OnlyAdminGuard'
 import { GetTokenPayload } from '../../decorators/GetTokenPayload'
 import { Roles } from '../../decorators/RolesDecorator'
 import { RolesGuard } from '../../guard/RoleGuard'
@@ -42,6 +44,12 @@ export class UsersController {
     @Inject('DeleteUserUseCase')
     private readonly deleteUserUseCase: DeleteUserUseCase
   ) {}
+
+  @Get('users')
+  @UseGuards(JwtAuthGuard, OnlyAdminGuard)
+  async findAll(): Promise<User[]> {
+    return this.queryUserUserCase.findAll()
+  }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
@@ -68,7 +76,7 @@ export class UsersController {
 
   @Roles(UserRoles.ADMIN)
   @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
-  @Put(':id')
+  @Delete(':id')
   async deleteOne(@Param('id') id: string): Promise<void> {
     return this.deleteUserUseCase.deleteOne(id)
   }

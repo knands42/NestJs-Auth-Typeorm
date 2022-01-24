@@ -9,7 +9,10 @@ export class OnlyAdminGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest()
 
-    const { role }: TokenPayload = request.user
+    const tokenPayload = request.user as TokenPayload
+    if (!tokenPayload) return false
+
+    const { role }: TokenPayload = tokenPayload
 
     return role === UserRoles.ADMIN
   }

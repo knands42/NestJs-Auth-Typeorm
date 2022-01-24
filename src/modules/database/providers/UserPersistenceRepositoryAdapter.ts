@@ -18,9 +18,9 @@ export class UserPersistenceRepositoryAdapter
     return this.userPersistenceRepository.save(user)
   }
 
-  async update(id: string, user: UpdateUserRequest): Promise<User> {
+  async update(id: string, user: User): Promise<User> {
     await this.userPersistenceRepository.update(id, user)
-    return this.userPersistenceRepository.create(user)
+    return user
   }
 
   async delete(id: string): Promise<void> {

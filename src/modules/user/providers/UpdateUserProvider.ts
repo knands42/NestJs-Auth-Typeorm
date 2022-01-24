@@ -23,13 +23,13 @@ export class UpdateUserProvider implements UpdateUserUseCase {
     const user = await this.userQueryRepositoryPort.findById(id)
 
     user.username = await this.retrieveUsernameToUpdate(payload, user)
-    user.email = await this.retrieveEmailToUpdate(payload, user)
+    user.email = await this.retrieveEmailToUpdate(payload, user) // TODO: send confirmation email
     user.name = payload.name ?? user.name
 
     if (payload.password)
       user.password = await this.authUseCase.hashPassword(payload.password)
 
-    return this.userPersistenceRepositoryPort.update(id, payload)
+    return this.userPersistenceRepositoryPort.update(id, user)
   }
 
   private async retrieveEmailToUpdate(

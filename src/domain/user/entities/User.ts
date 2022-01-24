@@ -61,6 +61,7 @@ class User extends BaseEntity {
     this.email = this.email.toLowerCase().trim()
     this.role = UserRoles.USER
     this.permissions = [UserPermissions.READ]
+    this.username = this.username ?? `${this.name}#${this.id.at(3)}`
   }
 }
 

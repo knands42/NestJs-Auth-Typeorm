@@ -31,7 +31,7 @@ async function bootstrap() {
   await app.listen(configService.get('PORT'))
   Logger.log(
     `Server running on port ${configService.get('PORT')} in ${
-      process.env.NODE_ENV
+      process.env.NODE_ENV ?? 'Debug'
     } mode`.blue.bold
   )
 }

@@ -8,7 +8,6 @@ import { RolesGuard } from './guard/RoleGuard'
 import { PermissionGuard } from './guard/PermissionGuard'
 import { UserCanOperate } from './guard/UserCanOperate'
 import { PassportModule } from '@nestjs/passport'
-import { AdminController } from './controller/v1/AdminController'
 import { UsersController } from './controller/v1/UserController'
 import { UpdateUserProvider } from './providers/UpdateUserProvider'
 import { DeleteUserProvider } from './providers/DeleteUserProvider'
@@ -19,7 +18,7 @@ import { DeleteUserProvider } from './providers/DeleteUserProvider'
     AuthModule,
     PassportModule.register({ defaultStrategy: 'jwt' })
   ],
-  controllers: [UsersController, AdminController],
+  controllers: [UsersController],
   providers: [
     {
       provide: 'QueryUserUseCase',
