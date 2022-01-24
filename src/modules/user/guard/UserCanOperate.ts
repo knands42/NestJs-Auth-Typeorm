@@ -22,9 +22,11 @@ export class UserCanOperate implements CanActivate {
     const request = context.switchToHttp().getRequest()
 
     const params = request.params
-    const user: TokenPayload = request.user
 
-    return from(this.queryUserUseCase.findById(user.id)).pipe(
+    const tokenPayload = request.user as TokenPayload
+    if (!tokenPayload) return false
+
+    return from(this.queryUserUseCase.findById(tokenPayload.id)).pipe(
       map((user: User) => {
         const hasPermission = user.id === String(params.id)
         return user && hasPermission
