@@ -60,15 +60,15 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('/users/signup (POST) - CONFLICT EXCEPTION', () => {
+    it('/users/signup (POST) - CONFLICT EXCEPTION same email', () => {
       request(app.getHttpServer())
         .post('/users/signup')
         .send({
-          name: 'John Doe',
-          email: ' johndoe@gmail.com ', // Email with whitespace
+          name: 'John Doe 2',
+          email: 'johndoe@gmail.com',
           password: '12345678',
           confirmPassword: '12345678',
-          username: 'John'
+          username: 'John Doe2'
         })
         .expect(409)
         .expect(res => {
@@ -78,7 +78,25 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('/users/signin (POST) with email', () => {
+    it('/users/signup (POST) - CONFLICT EXCEPTION same username', () => {
+      request(app.getHttpServer())
+        .post('/users/signup')
+        .send({
+          name: 'John Doe 2',
+          email: 'johndoe2@gmail.com',
+          password: '12345678',
+          confirmPassword: '12345678',
+          username: 'John Doe'
+        })
+        .expect(409)
+        .expect(res => {
+          expect(res.body.message).toBe('User already signed')
+          expect(res.body.error).toBe('Conflict')
+          expect(res.body.statusCode).toBe(409)
+        })
+    })
+
+    it('/users/signin (POST) - SUCCESS with email', () => {
       return request(app.getHttpServer())
         .post('/users/signin')
         .send({
@@ -91,7 +109,7 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('/users/signin (POST) with username', () => {
+    it('/users/signin (POST) - SUCCESS with username', () => {
       return request(app.getHttpServer())
         .post('/users/signin')
         .send({
@@ -101,6 +119,20 @@ describe('AppController (e2e)', () => {
         .expect(200)
         .expect(res => {
           expect(res.body.token).toBeDefined()
+        })
+    })
+
+    it('/users/signin (POST) - NOT FOUND', () => {
+      return request(app.getHttpServer())
+        .post('/users/signin')
+        .send({
+          credential: 'invalid-email@gmail.com',
+          password: '12345678'
+        })
+        .expect(401)
+        .expect(res => {
+          expect(res.body.error).toBe('Unauthorized')
+          expect(res.body.statusCode).toBe(401)
         })
     })
   })
