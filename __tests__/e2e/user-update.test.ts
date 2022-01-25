@@ -172,15 +172,5 @@ describe('AppController (e2e)', () => {
           expect(res.body.error.message).toBe('Email already taken!')
         })
     })
-
-    // it('/users/{:id} (PUT) - SUCCESS empty payload', () => {
-    //   return request(app.getHttpServer())
-    //     .put(`/users/${userId}`)
-    //     .set('Authorization', `Bearer ${token}`)
-    //     .expect(200)
-    //     .expect(res => {
-    //       console.log('rest', res.body)
-    //     })
-    // })
   })
 })
