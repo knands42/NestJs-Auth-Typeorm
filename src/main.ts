@@ -1,5 +1,10 @@
 import 'reflect-metadata'
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common'
+import {
+  INestApplication,
+  Logger,
+  ValidationPipe,
+  VersioningType
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './AppModule'
@@ -12,6 +17,19 @@ import {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+
+  appSetup(app)
+
+  const configService = app.get(ConfigService)
+  await app.listen(configService.get('PORT'))
+  Logger.log(
+    `Server running on port ${configService.get('PORT')} in ${
+      process.env.NODE_ENV ?? 'Debug'
+    } mode`.blue.bold
+  )
+}
+
+export function appSetup(app: INestApplication) {
   app.enableCors()
   app.setGlobalPrefix('api')
   app.enableVersioning({
@@ -26,13 +44,6 @@ async function bootstrap() {
       exceptionFactory: validationErrorFactory
     })
   )
-
-  const configService = app.get(ConfigService)
-  await app.listen(configService.get('PORT'))
-  Logger.log(
-    `Server running on port ${configService.get('PORT')} in ${
-      process.env.NODE_ENV ?? 'Debug'
-    } mode`.blue.bold
-  )
 }
+
 bootstrap()

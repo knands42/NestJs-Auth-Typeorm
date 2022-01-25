@@ -33,6 +33,8 @@ class DatabaseConfig {
   public static readonly SQL_PORT: number = get('SQL_PORT')
     .required()
     .asIntPositive()
+
+  public static readonly NODE_ENV: string = get('NODE_ENV').asString() ?? 'dev'
 }
 
 export const typeormConfig = {
@@ -43,7 +45,10 @@ export const typeormConfig = {
   port: DatabaseConfig.SQL_PORT,
   username: DatabaseConfig.SQL_USERNAME,
   password: DatabaseConfig.SQL_PASSWORD,
-  database: DatabaseConfig.SQL_DATABASE,
+  database:
+    DatabaseConfig.NODE_ENV === 'test'
+      ? `${DatabaseConfig.SQL_DATABASE}_test`
+      : DatabaseConfig.SQL_DATABASE,
   dropSchema: false,
   synchronize: false,
   keepConnectionAlive: true,

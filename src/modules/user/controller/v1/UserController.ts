@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Inject,
   Param,
   Post,
@@ -87,6 +88,7 @@ export class UsersController {
   }
 
   @Post('signin')
+  @HttpCode(200)
   async signIn(@Body() payload: SignInRequest): Promise<SignInResponse> {
     return this.signUpUserUseCase.signIn(payload)
   }
