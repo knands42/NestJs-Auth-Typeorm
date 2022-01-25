@@ -1,11 +1,16 @@
 import { getConnection } from 'typeorm'
 import { randomUUID } from 'crypto'
-import { User } from '../../src/domain/user/entities/User'
+import {
+  User,
+  UserPermissions,
+  UserRoles
+} from '../../src/domain/user/entities/User'
 
 export class DatabaseTestUtils {
   static async populateDatabase(
     username: string = 'John',
-    email: string = 'johndoe@gmail.com'
+    email: string = 'johndoe@gmail.com',
+    admin: boolean = false
   ): Promise<User> {
     const user = new User()
     user.name = 'John Doe'
@@ -17,6 +22,8 @@ export class DatabaseTestUtils {
     user.updatedAt = new Date()
     user.emailVerified = false
     user.id = randomUUID()
+    user.permissions = [UserPermissions.READ]
+    user.role = admin ? UserRoles.ADMIN : UserRoles.USER
 
     await getConnection().manager.save(user)
 

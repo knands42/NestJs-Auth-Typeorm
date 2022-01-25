@@ -12,12 +12,7 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import { TokenPayload } from 'domain/auth/types'
-import {
-  QueryUserUseCase,
-  SignUpUserUseCase,
-  User,
-  UserRoles
-} from 'domain/user'
+import { QueryUserUseCase, SignUpUserUseCase, User } from 'domain/user'
 import { SignInRequest } from 'domain/user/models/request/SignInRequest'
 import { SignUpRequest } from 'domain/user/models/request/SignUpRequest'
 import { UpdateUserRequest } from 'domain/user/models/request/UpdateUserRequest'
@@ -27,9 +22,7 @@ import { UpdateUserUseCase } from 'domain/user/port/in/UpdateUserUseCase'
 import { JwtAuthGuard } from 'modules/auth/guards/JwtAuthGuard'
 import { OnlyAdminGuard } from 'modules/user/guards/OnlyAdminGuard'
 import { GetTokenPayload } from '../../decorators/GetTokenPayload'
-import { Roles } from '../../decorators/RolesDecorator'
-import { RolesGuard } from '../../guards/RoleGuard'
-import { UserCanOperate } from '../../guards/UserCanOperate'
+import { UserCanOperateGuard } from '../../guards/UserCanOperateGuard'
 import { ResponseInterceptor } from '../../interceptor/ResponseInterceptor'
 
 @Controller('users')
@@ -46,7 +39,7 @@ export class UsersController {
     private readonly deleteUserUseCase: DeleteUserUseCase
   ) {}
 
-  @Get('users')
+  @Get()
   @UseGuards(JwtAuthGuard, OnlyAdminGuard)
   async findAll(): Promise<User[]> {
     return this.queryUserUserCase.findAll()
@@ -59,14 +52,12 @@ export class UsersController {
   }
 
   @Get(':id')
-  @Roles(UserRoles.ADMIN)
-  @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
+  @UseGuards(JwtAuthGuard, UserCanOperateGuard)
   async findOne(@Param('id') id: string): Promise<User> {
     return this.queryUserUserCase.findById(id)
   }
 
-  @Roles(UserRoles.ADMIN)
-  @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
+  @UseGuards(JwtAuthGuard, UserCanOperateGuard)
   @Put(':id')
   async updateOne(
     @Param('id') id: string,
@@ -75,8 +66,8 @@ export class UsersController {
     return this.updateUserUseCase.updateOne(id, payload)
   }
 
-  @Roles(UserRoles.ADMIN)
-  @UseGuards(JwtAuthGuard, UserCanOperate || RolesGuard)
+  @UseGuards(JwtAuthGuard, UserCanOperateGuard)
+  @HttpCode(204)
   @Delete(':id')
   async deleteOne(@Param('id') id: string): Promise<void> {
     return this.deleteUserUseCase.deleteOne(id)
@@ -87,8 +78,8 @@ export class UsersController {
     return this.signUpUserUseCase.signUp(payload)
   }
 
-  @Post('signin')
   @HttpCode(200)
+  @Post('signin')
   async signIn(@Body() payload: SignInRequest): Promise<SignInResponse> {
     return this.signUpUserUseCase.signIn(payload)
   }

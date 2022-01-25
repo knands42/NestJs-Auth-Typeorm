@@ -12,6 +12,8 @@ export class AuthProvider implements AuthUseCase {
     return this.jwtService.sign(payload)
   }
 
+  //TODO: Refresh token
+
   async comparePassword(
     password: string,
     hashPassword: string

@@ -6,11 +6,12 @@ import { SignUserProvider } from './providers/SignUserProvider'
 import { ResponseInterceptor } from './interceptor/ResponseInterceptor'
 import { RolesGuard } from './guards/RoleGuard'
 import { PermissionGuard } from './guards/PermissionGuard'
-import { UserCanOperate } from './guards/UserCanOperate'
+import { UserCanOperateGuard } from './guards/UserCanOperateGuard'
 import { PassportModule } from '@nestjs/passport'
 import { UsersController } from './controller/v1/UserController'
 import { UpdateUserProvider } from './providers/UpdateUserProvider'
 import { DeleteUserProvider } from './providers/DeleteUserProvider'
+import { OnlyAdminGuard } from './guards/OnlyAdminGuard'
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { DeleteUserProvider } from './providers/DeleteUserProvider'
     ResponseInterceptor,
     RolesGuard,
     PermissionGuard,
-    UserCanOperate
+    OnlyAdminGuard,
+    UserCanOperateGuard
   ],
   exports: [{ provide: 'QueryUserUseCase', useClass: QueryUserProvider }]
 })

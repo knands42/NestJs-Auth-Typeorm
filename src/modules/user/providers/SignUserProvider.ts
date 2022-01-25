@@ -51,9 +51,11 @@ export class SignUserProvider implements SignUpUserUseCase {
       payload.password,
       user.password
     )
+
     if (!passwordCheck) throw new UnauthorizedException('Wrong credentials')
 
     const { id, permissions, username, role } = user
+
     const token = await this.authUseCase.generateJwt({
       id,
       permissions,
