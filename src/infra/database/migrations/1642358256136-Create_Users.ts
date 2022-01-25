@@ -21,14 +21,12 @@ export class CreateUsers1642358256136 implements MigrationInterface {
             name: 'name',
             type: 'varchar',
             length: '255',
-            isUnique: true,
             isNullable: false
           },
           {
             name: 'avatar_url',
             type: 'varchar',
             length: '255',
-            isUnique: true,
             isNullable: true
           },
           {
@@ -49,7 +47,6 @@ export class CreateUsers1642358256136 implements MigrationInterface {
             name: 'password',
             type: 'varchar',
             length: '255',
-            isUnique: true,
             isNullable: false
           },
           {

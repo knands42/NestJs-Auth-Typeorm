@@ -1,13 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { INestApplication } from '@nestjs/common'
+import { INestApplication, ValidationPipe } from '@nestjs/common'
 import * as request from 'supertest'
 import {
   FastifyAdapter,
   NestFastifyApplication
 } from '@nestjs/platform-fastify'
 import { AppModule } from '../../src/AppModule'
-import { getConnection } from 'typeorm'
 import { UserRoles, UserPermissions } from '../../src/domain/user/entities/User'
+import { DatabaseTestUtils } from '../utils/DatabaseTestUtils'
+import {
+  AllExceptionFilter,
+  ResultInterceptor,
+  validationErrorFactory
+} from '../../src/infra'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
@@ -21,17 +26,20 @@ describe('AppController (e2e)', () => {
       new FastifyAdapter()
     )
 
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        exceptionFactory: validationErrorFactory
+      })
+    )
+    app.useGlobalInterceptors(new ResultInterceptor())
+    app.useGlobalFilters(new AllExceptionFilter())
     await app.init()
     await app.getHttpAdapter().getInstance().ready()
   })
 
   afterAll(async () => {
-    const entities = getConnection().entityMetadatas
-
-    for (const entity of entities) {
-      const repository = getConnection().getRepository(entity.name)
-      await repository.clear()
-    }
+    DatabaseTestUtils.truncateTable()
 
     await app.close()
   })
@@ -42,21 +50,22 @@ describe('AppController (e2e)', () => {
         .post('/users/signup')
         .send({
           name: 'John Doe',
-          email: ' johndoe@gmail.com ', // Email with whitespace
+          email: 'johndoe@gmail.com',
           password: '12345678',
           confirmPassword: '12345678',
           username: 'John'
         })
         .expect(201)
         .expect(res => {
-          expect(res.body.role).toBe(UserRoles.USER)
-          expect(res.body.username).toBe('John')
-          expect(res.body.email).toBe('johndoe@gmail.com')
-          expect(res.body.permissions).toEqual([UserPermissions.READ])
-          expect(res.body.id).toBeDefined()
-          expect(res.body.emailVerified).toBeFalsy()
-          expect(res.body.createdAt).toBeDefined()
-          expect(res.body.updatedAt).toBeDefined()
+          expect(res.body.data.role).toBe(UserRoles.USER)
+          expect(res.body.data.username).toBe('John')
+          expect(res.body.data.name).toBe('John Doe')
+          expect(res.body.data.email).toBe('johndoe@gmail.com')
+          expect(res.body.data.permissions).toEqual([UserPermissions.READ])
+          expect(res.body.data.id).toBeDefined()
+          expect(res.body.data.emailVerified).toBeFalsy()
+          expect(res.body.data.createdAt).toBeDefined()
+          expect(res.body.data.updatedAt).toBeDefined()
         })
     })
 
@@ -72,9 +81,9 @@ describe('AppController (e2e)', () => {
         })
         .expect(409)
         .expect(res => {
-          expect(res.body.message).toBe('User already signed')
-          expect(res.body.error).toBe('Conflict')
-          expect(res.body.statusCode).toBe(409)
+          expect(res.body.error.message).toBe('User already signed')
+          expect(res.body.error.error).toBe('Conflict')
+          expect(res.body.error.statusCode).toBe(409)
         })
     })
 
@@ -90,9 +99,9 @@ describe('AppController (e2e)', () => {
         })
         .expect(409)
         .expect(res => {
-          expect(res.body.message).toBe('User already signed')
-          expect(res.body.error).toBe('Conflict')
-          expect(res.body.statusCode).toBe(409)
+          expect(res.body.error.message).toBe('User already signed')
+          expect(res.body.error.error).toBe('Conflict')
+          expect(res.body.error.statusCode).toBe(409)
         })
     })
 
@@ -105,7 +114,7 @@ describe('AppController (e2e)', () => {
         })
         .expect(200)
         .expect(res => {
-          expect(res.body.token).toBeDefined()
+          expect(res.body.data.token).toBeDefined()
         })
     })
 
@@ -118,11 +127,11 @@ describe('AppController (e2e)', () => {
         })
         .expect(200)
         .expect(res => {
-          expect(res.body.token).toBeDefined()
+          expect(res.body.data.token).toBeDefined()
         })
     })
 
-    it('/users/signin (POST) - NOT FOUND', () => {
+    it('/users/signin (POST) - UNAUTHORIZED', () => {
       return request(app.getHttpServer())
         .post('/users/signin')
         .send({
@@ -131,8 +140,9 @@ describe('AppController (e2e)', () => {
         })
         .expect(401)
         .expect(res => {
-          expect(res.body.error).toBe('Unauthorized')
-          expect(res.body.statusCode).toBe(401)
+          expect(res.body.error.type).toBe('Unauthorized')
+          expect(res.body.error.status).toBe(401)
+          expect(res.body.error.message).toBe('Wrong credentials')
         })
     })
   })

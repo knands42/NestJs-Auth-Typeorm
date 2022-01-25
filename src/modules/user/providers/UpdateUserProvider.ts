@@ -20,6 +20,8 @@ export class UpdateUserProvider implements UpdateUserUseCase {
   ) {}
 
   async updateOne(id: string, payload: UpdateUserRequest): Promise<User> {
+    if (Object.keys(payload).length === 0) return
+
     const user = await this.userQueryRepositoryPort.findById(id)
 
     user.username = await this.retrieveUsernameToUpdate(payload, user)
@@ -43,7 +45,7 @@ export class UpdateUserProvider implements UpdateUserUseCase {
         })
 
       if (emailExists) {
-        throw new ConflictException('Email already registered!')
+        throw new ConflictException('Email already taken!')
       }
     }
 
