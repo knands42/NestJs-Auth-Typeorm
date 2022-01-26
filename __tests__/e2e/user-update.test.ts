@@ -15,7 +15,7 @@ import {
   validationErrorFactory
 } from '../../src/infra'
 
-describe('AppController (e2e)', () => {
+describe('UsersController (e2e)', () => {
   let app: INestApplication
   let jwtService: JwtService
   let userId: string
@@ -52,11 +52,11 @@ describe('AppController (e2e)', () => {
   })
 
   afterEach(async () => {
-    DatabaseTestUtils.truncateTable()
+    await DatabaseTestUtils.truncateTable()
   })
 
   afterAll(async () => {
-    DatabaseTestUtils.truncateTable()
+    await DatabaseTestUtils.truncateTable()
     await app.close()
   })
 
@@ -80,7 +80,28 @@ describe('AppController (e2e)', () => {
         })
     })
 
-    it('/users/{:id} (PUT) - VALIDATION ERROR', () => {
+    it('/users/{:id} (PUT) - NOT FOUND', () => {
+      return request(app.getHttpServer())
+        .put(`/users/${userId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          name: 'John Doe 2',
+          username: 'John 2',
+          email: 'johndoe2@gmail.com',
+          password: '12345678',
+          confirmPassword: '12345678'
+        })
+        .expect(200)
+        .expect(res => {
+          expect(res.body.data.name).toBe('John Doe 2')
+          expect(res.body.data.username).toBe('John 2')
+          expect(res.body.data.email).toBe('johndoe2@gmail.com')
+        })
+    })
+
+    it('/users/{:id} (PUT) - VALIDATION ERROR', async () => {
+      await DatabaseTestUtils.truncateTable()
+
       return request(app.getHttpServer())
         .put(`/users/${userId}`)
         .set('Authorization', `Bearer ${token}`)
@@ -90,10 +111,11 @@ describe('AppController (e2e)', () => {
           email: 'johndoe2@gmail.com',
           password: '12345678'
         })
-        .expect(400)
+        .expect(404)
         .expect(res => {
-          expect(res.body.error.type).toBe('ClassValidation')
-          expect(res.body.error.message).toBeDefined()
+          expect(res.body.error.message).toBe('User could not be found!')
+          expect(res.body.error.status).toBe(404)
+          expect(res.body.error.type).toBe('Not Found')
         })
     })
 

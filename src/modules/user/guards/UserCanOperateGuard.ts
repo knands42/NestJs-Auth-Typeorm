@@ -4,9 +4,8 @@ import {
   Inject,
   Injectable
 } from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
 import { TokenPayload } from 'domain/auth/types'
-import { QueryUserUseCase, User, UserRoles } from 'domain/user'
+import { QueryUserUseCase, User } from 'domain/user'
 import { from, Observable, of } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -14,8 +13,7 @@ import { map } from 'rxjs/operators'
 export class UserCanOperateGuard implements CanActivate {
   constructor(
     @Inject('QueryUserUseCase')
-    private readonly queryUserUseCase: QueryUserUseCase,
-    private readonly reflector: Reflector
+    private readonly queryUserUseCase: QueryUserUseCase
   ) {}
 
   canActivate(context: ExecutionContext): Observable<boolean> {
@@ -27,7 +25,7 @@ export class UserCanOperateGuard implements CanActivate {
     if (!tokenPayload) return of(false)
 
     return from(this.queryUserUseCase.findById(tokenPayload.id)).pipe(
-      map((user: User) => user.id === String(params.id))
+      map((user: User) => user && user.id === String(params.id))
     )
   }
 }

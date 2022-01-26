@@ -23,6 +23,7 @@ module.exports = {
   collectCoverageFrom: ['<rootDir>/src/modules/**/*.ts'],
   coveragePathIgnorePatterns: [
     '<rootDir>/src/domain/*',
+    '<rootDir>/src/domain/**/*index.ts',
     '<rootDir>/src/infra/*',
     '<rootDir>/src/AppModule.ts'
   ]

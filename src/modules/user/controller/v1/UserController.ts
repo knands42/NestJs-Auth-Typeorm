@@ -39,12 +39,6 @@ export class UsersController {
     private readonly deleteUserUseCase: DeleteUserUseCase
   ) {}
 
-  @Get()
-  @UseGuards(JwtAuthGuard, OnlyAdminGuard)
-  async findAll(): Promise<User[]> {
-    return this.queryUserUserCase.findAll()
-  }
-
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async findUserInfo(@GetTokenPayload() payload: TokenPayload): Promise<User> {

@@ -43,16 +43,9 @@ describe('UsersController (e2e)', () => {
     await app.getHttpAdapter().getInstance().ready()
 
     jwtService = app.get(JwtService)
-  })
-
-  beforeEach(async () => {
     const user = await DatabaseTestUtils.populateDatabase()
     userId = user.id
     token = await TokenTestUtils.generateToken(jwtService, user)
-  })
-
-  afterEach(async () => {
-    await DatabaseTestUtils.truncateTable()
   })
 
   afterAll(async () => {
@@ -60,13 +53,41 @@ describe('UsersController (e2e)', () => {
     await app.close()
   })
 
-  //TODO: #1 Add tests
-  describe('User Delete', () => {
-    it('/users/{:id} (DELETE) - SUCCESS', () => {
-      //   return request(app.getHttpServer())
-      //     .delete(`/users/${userId}`)
-      //     .set('Authorization', `Bearer ${token}`)
-      //     .expect(204)
+  describe('User Details about ME', () => {
+    it('/users/me (GET) - SUCCESS', () => {
+      return request(app.getHttpServer())
+        .get(`/users/me`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body.data.name).toBe('John Doe')
+          expect(res.body.data.username).toBe('John')
+          expect(res.body.data.email).toBe('johndoe@gmail.com')
+        })
+    })
+
+    it('/users/me (GET) - UNAUTHORIZED', () => {
+      return request(app.getHttpServer())
+        .get(`/users/me`)
+        .expect(401)
+        .expect(res => {
+          expect(res.body.error.message).toBe('Unauthorized')
+          expect(res.body.error.status).toBe(401)
+        })
+    })
+
+    it('/users/me (GET) - NOT FOUND', async () => {
+      await DatabaseTestUtils.truncateTable()
+
+      return request(app.getHttpServer())
+        .get(`/users/me`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+        .expect(res => {
+          expect(res.body.error.message).toBe('User could not be found!')
+          expect(res.body.error.status).toBe(404)
+          expect(res.body.error.type).toBe('Not Found')
+        })
     })
   })
 })

@@ -15,7 +15,7 @@ export class QueryUserProvider implements QueryUserUseCase {
   }
 
   async findById(id: string): Promise<User> {
-    const user = this.userQueryRepositoryPort.findById(id)
+    const user = await this.userQueryRepositoryPort.findById(id)
 
     if (!user) throw new NotFoundException('User could not be found!')
 

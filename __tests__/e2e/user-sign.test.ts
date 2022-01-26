@@ -14,7 +14,7 @@ import {
   validationErrorFactory
 } from '../../src/infra'
 
-describe('AppController (e2e)', () => {
+describe('UsersController (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
@@ -39,7 +39,7 @@ describe('AppController (e2e)', () => {
   })
 
   afterAll(async () => {
-    DatabaseTestUtils.truncateTable()
+    await DatabaseTestUtils.truncateTable()
 
     await app.close()
   })
